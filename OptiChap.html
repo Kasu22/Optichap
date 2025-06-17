@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptiChap - Ma Boutique</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Styles personnalisés si besoin */
+        body {
+            font-family: 'Inter', sans-serif; /* Utilisation de la police Inter */
+        }
+        .product-card {
+            min-height: 300px; /* Ajuster si nécessaire pour la hauteur des cartes produits */
+        }
+        /* Style pour les étoiles */
+        .star-filled {
+            color: #edd60a; /* Jaune de Tailwind CSS */
+        }
+        .star-empty {
+            color: #D1D5DB; /* Gris clair de Tailwind CSS */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- En-tête et navigation supérieure -->
+    <header class="bg-white shadow-md p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex items-center justify-between">
+            <img src="logo.png" alt="logo" width="64" height="64">
+            <div class="flex-grow mx-4 relative">
+                <!-- Champ de recherche avec fonction de recherche -->
+                <input type="text" id="search-input" placeholder="Recherche..." class="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" onkeyup="searchProducts()">
+                <!-- Icône de recherche SVG -->
+                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <!-- Navigation pour desktop -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="#" class="text-gray-600 hover:text-blue-500 font-medium rounded-full p-2" onclick="showSection('home')">Accueil</a>
+                <a href="#" class="text-gray-600 hover:text-blue-500 font-medium rounded-full p-2" onclick="showSection('cart')">Panier</a>
+                <!-- Bouton Compte maintenant lié à la page de connexion -->
+                <a href="#" class="text-gray-600 hover:text-blue-500 font-medium rounded-full p-2" onclick="showSection('account-login')">Compte</a>
+            </nav>
+        </div>
+        <!-- Boutons de catégorie pour mobile/filtres -->
+        <div class="container mx-auto mt-4 flex justify-center space-x-4">
+            <button id="filter-all" class="px-6 py-2 rounded-full bg-blue-500 text-white font-semibold shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" onclick="filterProducts('all', this)">Tous les articles</button>
+            <button id="filter-lunettes" class="px-6 py-2 rounded-full bg-blue-500 text-white font-semibold shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" onclick="filterProducts('lunettes', this)">Lunettes</button>
+            <button id="filter-chapeaux" class="px-6 py-2 rounded-full bg-blue-500 text-white font-semibold shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" onclick="filterProducts('chapeaux', this)">Chapeaux</button>
+        </div>
+    </header>
+
+    <!-- Contenu principal - Sections de l'application -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Section Accueil / Liste de produits (Inspiré de l'écran 1) -->
+        <section id="home" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Découvrez notre collection</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="product-list">
+                <!-- Carte Produit 1 - Lunettes de soleil -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card hover:shadow-lg transition-shadow duration-300 cursor-pointer" onclick="showSection('product-detail')" data-category="lunettes" data-search-terms="lunettes de soleil vintage protection uv optimale style classique">
+                    <img src="Lunette de soleil bleu.png" alt="Lunettes de Soleil" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Lunettes de Soleil Bleu</h3>
+                        <p class="text-gray-600 text-sm mb-3">Protection UV optimale, style moderne</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-blue-500">59,99 €</span>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte Produit 2 - Chapeau de paille -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card hover:shadow-lg transition-shadow duration-300 cursor-pointer" onclick="showSection('product-detail')" data-category="chapeaux" data-search-terms="chapeau de paille élégant parfait été plage">
+                    <img src="chapeau de paille.webp" alt="Chapeau de Paille" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Chapeau de Paille Élégant</h3>
+                        <p class="text-gray-600 text-sm mb-3">Parfait pour l'été et la plage</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-blue-500">34,50 €</span>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte Produit 3 - Casquette en toile -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card hover:shadow-lg transition-shadow duration-300 cursor-pointer" onclick="showSection('product-detail')" data-category="casquette" data-search-terms="casquette en toile">
+                    <img src="Casquette gucci.avif" alt="Casquette en toile" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Casquette en toile tendance</h3>
+                        <p class="text-gray-600 text-sm mb-3">Casquette en toile avec bande</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-blue-500">189,99 €</span>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Carte Produit 4 - Chapeau Fedora -->
+                 <div class="bg-white rounded-lg shadow-md overflow-hidden product-card hover:shadow-lg transition-shadow duration-300 cursor-pointer" onclick="showSection('product-detail')" data-category="chapeaux" data-search-terms="chapeau fedora classique élégance intemporelle">
+                    <img src="fedora.webp" alt="Chapeau Fedora" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Chapeau Fedora Classique</h3>
+                        <p class="text-gray-600 text-sm mb-3">Élégance intemporelle pour toutes occasions.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-blue-500">45,00 €</span>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nouvel Article 5 - Lunettes de soleil Aviateur -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card hover:shadow-lg transition-shadow duration-300 cursor-pointer" onclick="showSection('product-detail')" data-category="lunettes" data-search-terms="lunettes de soleil aviateur légères protection solaire">
+                    <img src="lunette aviateur.jpg" alt="Lunettes de soleil Aviateur" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Lunettes de Soleil Aviateur</h3>
+                        <p class="text-gray-600 text-sm mb-3">Design iconique, légères et confortables.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-blue-500">69,99 €</span>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nouvel Article 6 - Casquette de Baseball -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card hover:shadow-lg transition-shadow duration-300 cursor-pointer" onclick="showSection('product-detail')" data-category="chapeaux" data-search-terms="casquette de baseball sport décontractée ajustement parfait">
+                    <img src="casquette baseball.jpg" alt="Casquette de Baseball" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Casquette de Baseball</h3>
+                        <p class="text-gray-600 text-sm mb-3">Idéale pour le sport ou un look décontracté.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-blue-500">19,99 €</span>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section Panier (Inspiré de l'écran 2) -->
+        <section id="cart" class="bg-white rounded-lg shadow-md p-6 mb-12 hidden"> <!-- Caché par défaut -->
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Votre Panier</h2>
+
+            <div class="space-y-4">
+                <!-- Article du panier 1 -->
+                <div class="flex items-center border-b pb-4">
+                    <img src="https://placehold.co/100x80/FDBA74/ffffff?text=Lunettes+Soleil" alt="Lunettes de Soleil" class="w-20 h-20 object-cover rounded mr-4">
+                    <div class="flex-grow">
+                        <h3 class="text-lg font-semibold text-gray-800">Lunettes de Soleil Vintage</h3>
+                        <p class="text-gray-600 text-sm">59,99 €</p>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="bg-gray-200 text-gray-700 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-300">-</button>
+                        <span class="mx-2 text-lg">1</span>
+                        <button class="bg-gray-200 text-gray-700 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-300">+</button>
+                        <button class="ml-4 text-red-500 hover:text-red-700">
+                            <!-- Icône de suppression SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Article du panier 2 -->
+                <div class="flex items-center pb-4">
+                    <img src="https://placehold.co/100x80/FDBA74/ffffff?text=Chapeau+Paille" alt="Chapeau de Paille" class="w-20 h-20 object-cover rounded mr-4">
+                    <div class="flex-grow">
+                        <h3 class="text-lg font-semibold text-gray-800">Chapeau de Paille Élégant</h3>
+                        <p class="text-gray-600 text-sm">34,50 €</p>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="bg-gray-200 text-gray-700 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-300">-</button>
+                        <span class="mx-2 text-lg">1</span>
+                        <button class="bg-gray-200 text-gray-700 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-300">+</button>
+                        <button class="ml-4 text-red-500 hover:text-red-700">
+                            <!-- Icône de suppression SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-6 pt-4 border-t-2 border-dashed border-gray-200 rounded">
+                <span class="text-xl font-bold text-gray-800">Total:</span>
+                <span class="text-2xl font-bold text-blue-500">94,49 €</span>
+            </div>
+
+            <button class="w-full bg-blue-500 text-white py-3 rounded-full mt-6 text-lg font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300" onclick="showSection('checkout')">Procéder au paiement</button>
+        </section>
+
+        <!-- Section Fiche Produit (Inspiré de l'écran 4) -->
+        <section id="product-detail" class="bg-white rounded-lg shadow-md p-6 mb-12 hidden"> <!-- Caché par défaut -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="flex justify-center items-center">
+                    <img src="Lunette de soleil bleu.png" alt="Lunettes de Soleil" class="w-full h-auto object-contain rounded-lg shadow-inner">
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-3">Lunettes de Soleil Exquises</h1>
+                    <p class="text-xl font-semibold text-blue-500 mb-4">79,99 €</p>
+
+                    <div class="flex items-center mb-4">
+                        <!-- Étoiles d'évaluation -->
+                        <div class="flex">
+                            <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-5 h-5 star-empty" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                        </div>
+                        <span class="text-gray-600 ml-2">4.5 (120 avis)</span>
+                    </div>
+
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        Ces lunettes de soleil offrent un style élégant et une protection UV efficace.
+                        Parfaites pour toutes les occasions, elles combinent mode et fonctionnalité.
+                        Verres polarisés de haute qualité pour une vision claire et sans éblouissement.
+                    </p>
+
+                    <button class="w-full bg-blue-500 text-white py-3 rounded-full text-lg font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300 mb-4">Ajouter au panier</button>
+                    <button class="w-full bg-gray-200 text-gray-800 py-3 rounded-full text-lg font-semibold shadow-md hover:bg-gray-300 transition-colors duration-300 mb-2" onclick="showSection('write-review')">Écrire un avis</button>
+                    <button class="w-full bg-gray-200 text-gray-800 py-3 rounded-full text-lg font-semibold shadow-md hover:bg-gray-300 transition-colors duration-300" onclick="showSection('product-reviews')">Voir les avis</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Écrire un avis (Inspiré de l'écran 5) -->
+        <section id="write-review" class="bg-white rounded-lg shadow-md p-6 mb-12 hidden"> <!-- Caché par défaut -->
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Écrire un avis</h2>
+
+            <div class="mb-4">
+                <label for="review-title" class="block text-gray-700 text-sm font-semibold mb-2">Titre de l'avis</label>
+                <input type="text" id="review-title" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Excellent produit !">
+            </div>
+
+            <div class="mb-4">
+                <label for="review-text" class="block text-gray-700 text-sm font-semibold mb-2">Votre avis</label>
+                <textarea id="review-text" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Décrivez votre expérience avec ce produit..."></textarea>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-semibold mb-2">Votre note</label>
+                <div class="flex space-x-2">
+                    <!-- Boutons pour sélectionner la note -->
+                    <button class="focus:outline-none" onclick="setRating(1)">
+                        <svg class="w-8 h-8 star-empty" fill="currentColor" viewBox="0 0 20 20" data-star="1"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                    </button>
+                    <button class="focus:outline-none" onclick="setRating(2)">
+                        <svg class="w-8 h-8 star-empty" fill="currentColor" viewBox="0 0 20 20" data-star="2"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                    </button>
+                    <button class="focus:outline-none" onclick="setRating(3)">
+                        <svg class="w-8 h-8 star-empty" fill="currentColor" viewBox="0 0 20 20" data-star="3"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                    </button>
+                    <button class="focus:outline-none" onclick="setRating(4)">
+                        <svg class="w-8 h-8 star-empty" fill="currentColor" viewBox="0 0 20 20" data-star="4"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                    </button>
+                    <button class="focus:outline-none" onclick="setRating(5)">
+                        <svg class="w-8 h-8 star-empty" fill="currentColor" viewBox="0 0 20 20" data-star="5"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <button class="w-full bg-blue-500 text-white py-3 rounded-full text-lg font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300">Soumettre</button>
+        </section>
+
+        <!-- Section Avis Produits (Inspiré de l'écran 6) -->
+        <section id="product-reviews" class="bg-white rounded-lg shadow-md p-6 mb-12 hidden"> <!-- Caché par défaut -->
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Avis Clients</h2>
+
+            <div class="flex items-center mb-6">
+                <span class="text-5xl font-bold text-gray-800 mr-4">4.5</span>
+                <div class="flex-grow">
+                    <!-- Barres de progression pour la répartition des notes -->
+                    <div class="flex items-center mb-1">
+                        <span class="text-gray-600 mr-2">5 étoiles</span>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-yellow-400 h-2.5 rounded-full" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center mb-1">
+                        <span class="text-gray-600 mr-2">4 étoiles</span>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-yellow-400 h-2.5 rounded-full" style="width: 15%"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center mb-1">
+                        <span class="text-gray-600 mr-2">3 étoiles</span>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-yellow-400 h-2.5 rounded-full" style="width: 3%"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center mb-1">
+                        <span class="text-gray-600 mr-2">2 étoiles</span>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-yellow-400 h-2.5 rounded-full" style="width: 1%"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600 mr-2">1 étoile</span>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-yellow-400 h-2.5 rounded-full" style="width: 1%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Avis 1 -->
+                <div class="border-b pb-4 rounded">
+                    <div class="flex items-center mb-2">
+                        <img src="https://placehold.co/40x40/6B7280/ffffff?text=AC" alt="Avatar" class="w-10 h-10 rounded-full mr-3 object-cover">
+                        <div>
+                            <p class="font-semibold text-gray-800">Anna Carter</p>
+                            <div class="flex text-sm">
+                                <svg class="w-4 h-4 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                                <svg class="w-4 h-4 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                                <svg class="w-4 h-4 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                                <svg class="w-4 h-4 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                                <svg class="w-4 h-4 star-empty" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00-.096 1.157L7.493 10l.913.665c.783.57 1.838-.197 1.539-1.118l-1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"J'adore ces lunettes ! La qualité est exceptionnelle et elles sont très élégantes. Je les porte presque tous les jours maintenant."</p>
+                </div>
+                <!-- Avis 2 -->
+                <div class="border-b pb-4 rounded">
+                    <div class="flex items-center mb-2">
+                        <img src="https://placehold.co/40x40/6B7280/ffffff?text=DB" alt="Avatar" class="w-10 h-10 rounded-full mr-3 object-cover">
+                        <div>
+                            <p class="font-semibold text-gray-800">David Bennet</p>
+                            <div class="flex text-sm">
+                                <svg class="w-4 h-4 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                                <svg class="w-4 h-4 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                                <svg class="w-4 h-4 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                                <svg class="w-4 h-4 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.683-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.565-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                                <svg class="w-4 h-4 star-empty" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00-.096 1.157L7.493 10l.913.665c.783.57 1.838-.197 1.539-1.118l-1.07-3.292a1 1 0 00-.364-1.118L2.927 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"Très content de mon chapeau. Il est parfaitement ajusté et très confortable. Je le recommande vivement !"</p>
+                </div>
+            </div>
+        </section>
+
+         <!-- Section Paiement (Inspiré de l'écran 3) -->
+         <section id="checkout" class="bg-white rounded-lg shadow-md p-6 mb-12 hidden"> <!-- Caché par défaut -->
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Paiement et Livraison</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Informations de livraison -->
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Informations de livraison</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="full-name" class="block text-gray-700 text-sm font-semibold mb-2">Nom complet</label>
+                            <input type="text" id="full-name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label for="address" class="block text-gray-700 text-sm font-semibold mb-2">Adresse</label>
+                            <input type="text" id="address" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="123 Rue de l'Exemple">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="city" class="block text-gray-700 text-sm font-semibold mb-2">Ville</label>
+                                <input type="text" id="city" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Paris">
+                            </div>
+                            <div>
+                                <label for="zip" class="block text-gray-700 text-sm font-semibold mb-2">Code Postal</label>
+                                <input type="text" id="zip" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="75001">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="country" class="block text-gray-700 text-sm font-semibold mb-2">Pays</label>
+                            <input type="text" id="country" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="France">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations de paiement et récapitulatif -->
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Informations de paiement</h3>
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label for="card-number" class="block text-gray-700 text-sm font-semibold mb-2">Numéro de carte</label>
+                            <input type="text" id="card-number" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="XXXX XXXX XXXX XXXX">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="expiry-date" class="block text-gray-700 text-sm font-semibold mb-2">Date d'expiration</label>
+                                <input type="text" id="expiry-date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="MM/AA">
+                            </div>
+                            <div>
+                                <label for="cvv" class="block text-gray-700 text-sm font-semibold mb-2">CVV</label>
+                                <input type="text" id="cvv" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="XXX">
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Récapitulatif de la commande</h3>
+                    <div class="space-y-2 mb-6 text-gray-700">
+                        <div class="flex justify-between">
+                            <span>Sous-total articles:</span>
+                            <span>89,99 €</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Frais de port:</span>
+                            <span>5,00 €</span>
+                        </div>
+                        <div class="flex justify-between text-lg font-bold text-gray-800 pt-2 border-t border-gray-200 rounded">
+                            <span>Total:</span>
+                            <span class="text-blue-500">94,99 €</span>
+                        </div>
+                    </div>
+
+                    <button class="w-full bg-blue-500 text-white py-3 rounded-full text-lg font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300">Payer maintenant</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nouvelle Section : Page de Connexion (pour le bouton Compte) -->
+        <section id="account-login" class="bg-white rounded-lg shadow-md p-6 mb-12 hidden">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Connectez-vous à votre compte</h2>
+
+            <form class="max-w-md mx-auto space-y-4">
+                <div>
+                    <label for="login-email" class="block text-gray-700 text-sm font-semibold mb-2">Email ou Nom d'utilisateur</label>
+                    <input type="text" id="login-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="votre_email@example.com ou nom_utilisateur">
+                </div>
+                <div>
+                    <label for="login-password" class="block text-gray-700 text-sm font-semibold mb-2">Mot de passe</label>
+                    <input type="password" id="login-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="********">
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-full text-lg font-semibold shadow-md hover:bg-blue-600 transition-colors duration-300">Se connecter</button>
+                <p class="text-center text-gray-600">Pas encore de compte ? <a href="#" class="text-blue-500 hover:underline">Créer un compte</a></p>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- Navigation inférieure pour mobile (Inspiré des écrans 1 et 2) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg md:hidden">
+        <div class="flex justify-around items-center h-16">
+            <a href="#" class="flex flex-col items-center text-blue-500" onclick="showSection('home')">
+                <!-- Icône Accueil SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span class="text-xs">Accueil</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-400 hover:text-blue-500" onclick="showSection('cart')">
+                <!-- Icône Panier SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                <span class="text-xs">Panier</span>
+            </a>
+            <!-- Bouton Compte maintenant lié à la page de connexion -->
+            <a href="#" class="flex flex-col items-center text-gray-400 hover:text-blue-500" onclick="showSection('account-login')">
+                <!-- Icône Compte SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.52 19c.64-2.2 1.84-3.8 2.92-4.5H15.56c1.08.7 2.28 2.3 2.92 4.5"></path><circle cx="12" cy="10" r="3"></circle><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path></svg>
+                <span class="text-xs">Compte</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- JavaScript simple pour afficher/masquer les sections et gérer les évaluations -->
+    <script>
+        // Variable pour stocker la catégorie actuellement filtrée
+        let currentFilterCategory = 'all';
+
+        // Fonction pour afficher une section et masquer les autres
+        function showSection(sectionId) {
+            // Masquer toutes les sections
+            document.querySelectorAll('main > section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            // Afficher la section demandée
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Mettre à jour l'état actif de la navigation inférieure (si applicable)
+            document.querySelectorAll('nav.fixed a').forEach(link => {
+                link.classList.remove('text-blue-500');
+                link.classList.add('text-gray-400');
+            });
+            const activeLink = document.querySelector(`nav.fixed a[onclick*="showSection('${sectionId}')"]`);
+            if (activeLink) {
+                activeLink.classList.remove('text-gray-400');
+                activeLink.classList.add('text-blue-500');
+            }
+
+            // Si on revient à la page d'accueil, réappliquer le filtre et la recherche actuels
+            if (sectionId === 'home') {
+                filterProducts(currentFilterCategory, document.getElementById('filter-' + currentFilterCategory));
+                searchProducts(); // Appliquer la recherche si du texte est déjà dans la barre
+            }
+        }
+
+        // Fonction pour gérer la sélection des étoiles dans le formulaire d'avis
+        function setRating(stars) {
+            const starElements = document.querySelectorAll('#write-review [data-star]');
+            starElements.forEach(star => {
+                const starValue = parseInt(star.dataset.star);
+                if (starValue <= stars) {
+                    star.classList.remove('star-empty');
+                    star.classList.add('star-filled');
+                } else {
+                    star.classList.remove('star-filled');
+                    star.classList.add('star-empty');
+                }
+            });
+        }
+
+        // Fonction pour filtrer les produits par catégorie
+        function filterProducts(category, clickedButton) {
+            currentFilterCategory = category; // Mettre à jour la catégorie active
+
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach(card => {
+                const isMatchingCategory = (category === 'all' || card.dataset.category === category);
+                // La visibilité est maintenant gérée par le filtre ET la recherche
+                const isVisibleBySearch = !card.classList.contains('hidden-by-search');
+                
+                if (isMatchingCategory && isVisibleBySearch) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Mettre à jour les styles des boutons de filtre
+            const filterButtons = document.querySelectorAll('#filter-all, #filter-lunettes, #filter-chapeaux');
+            filterButtons.forEach(button => {
+                button.classList.remove('bg-blue-500', 'text-white');
+                button.classList.add('bg-gray-200', 'text-gray-800');
+            });
+
+            if (clickedButton) {
+                clickedButton.classList.remove('bg-gray-200', 'text-gray-800');
+                clickedButton.classList.add('bg-blue-500', 'text-white');
+            }
+        }
+
+        // Nouvelle fonction pour la recherche de produits
+        function searchProducts() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const productCards = document.querySelectorAll('.product-card');
+
+            productCards.forEach(card => {
+                const searchTerms = card.dataset.searchTerms.toLowerCase();
+                const isVisibleByCategory = !card.classList.contains('hidden'); // Vérifie si la carte n'est pas déjà masquée par le filtre de catégorie
+
+                if (searchTerms.includes(searchTerm) && isVisibleByCategory) {
+                    card.classList.remove('hidden', 'hidden-by-search'); // S'assurer qu'elle est visible et retirer le marqueur de recherche
+                } else if (!searchTerms.includes(searchTerm)) {
+                    card.classList.add('hidden', 'hidden-by-search'); // Masquer et ajouter un marqueur pour la recherche
+                } else {
+                     // Si la carte était déjà cachée par le filtre de catégorie mais correspond à la recherche,
+                     // elle reste cachée mais on retire le marqueur de recherche pour la clarté.
+                    card.classList.remove('hidden-by-search');
+                }
+            });
+        }
+
+        // Définir la section initiale à afficher et le filtre au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('home'); // Affiche la section d'accueil
+            filterProducts('all', document.getElementById('filter-all')); // Applique le filtre "Tous les articles" par défaut
+        });
+    </script>
+</body>
+</html>
